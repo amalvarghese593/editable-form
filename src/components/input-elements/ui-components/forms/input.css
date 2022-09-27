@@ -1,0 +1,224 @@
+/*
+  inp : input
+  wpr : wrapper
+  cntr: container
+  prpnd: prepended
+  apnd: appended
+*/
+:root {
+  --color: #1276bb;
+  --radius: 6px;
+  --border: 1px solid #c6c6c6;
+}
+.inp-cntr {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.inp-cntr input,
+select {
+  border: 0;
+  border-radius: var(--radius);
+  border: var(--border);
+  background-color: transparent;
+  padding-top: 17px;
+  padding-inline: 7px;
+  font-size: 14px;
+  transition: all ease-in-out 250ms;
+}
+
+.inp-cntr label {
+  position: absolute;
+  transform: translateY(10px);
+  font-size: 14px;
+  padding-left: 8px;
+  pointer-events: none;
+  transition: all ease-in 250ms;
+}
+
+.inp-grp button {
+  border: var(--border);
+}
+
+/*
+  Focus on related styles of input
+*/
+
+.inp-cntr:has(input:focus) label,
+.inp-cntr:has(input:not([value=""])) label {
+  transform: translateY(5px);
+  font-size: 10px;
+}
+.inp-cntr input:focus,
+.inp-cntr select:focus {
+  outline-color: var(--color);
+}
+/*
+  Composite two components
+*/
+.inp-composite {
+  display: flex;
+}
+
+.inp-prpnd > *:first-child {
+  padding-top: 11px;
+  padding-bottom: 10px;
+  padding-inline: 16px;
+  border: 1px solid #90929b;
+  box-sizing: border-box;
+  user-select: none;
+  -moz-user-select: none;
+}
+
+/* 
+  Input group styling
+*/
+.inp-grp {
+  max-width: 100%;
+  display: flex;
+}
+
+/*
+  Reset border radius of inputs and controls
+*/
+.inp-grp > .inp-cntr:not(:first-child) input,
+.inp-grp > :not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.inp-grp > .inp-cntr:not(:last-child) input,
+.inp-grp > :not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/*
+  Prefixed text styling group input
+*/
+.inp-grp-txt {
+  background-color: #efeeff;
+  line-height: 40px;
+  padding-inline: 8px;
+  font-size: 14px;
+  border-radius: var(--radius);
+}
+
+.inp-grp > select {
+  padding-block: 0;
+}
+
+/*
+  Input Number Controls
+*/
+.arithmetic-controls {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-direction: column;
+  border: 0;
+  padding: 0;
+  border-radius: var(--radius);
+}
+.inc-ctrl,
+.dec-ctrl {
+  padding-inline: 8px;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  height: 50%;
+}
+.inc-ctrl .fas,
+.dec-ctrl .fas {
+  font-size: 12px;
+  color: #c6c6c6;
+}
+.arithmetic-controls > :first-child {
+  border-bottom: var(--border);
+}
+
+/* 
+   Border-Left Reset
+   Restting border for element except first children of input group
+*/
+.inp-grp > :not(:first-child) {
+  border-left: 0;
+  background-color: transparent;
+}
+
+/* 
+   Border-Right Reset
+   Restting border for element except last children of input group
+*/
+
+.inp-grp > :not(:last-child) {
+  border-right: 0;
+}
+
+/*
+  Number input group
+  combining from and to range input styles
+*/
+.range-inp-grp {
+  display: flex;
+  flex-direction: row;
+}
+.range-inp-grp > .inp-grp:not(:first-child) input,
+.range-inp-grp > .inp-grp:not(:first-child) button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.range-inp-grp > .inp-grp:not(:last-child) input,
+.range-inp-grp > .inp-grp:not(:last-child) button {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/*
+  Label Styling
+  combining from and to range input styles
+*/
+.inp-grp-label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 400;
+  color: #1276bb;
+  letter-spacing: 2px;
+}
+
+.inp-cntr input {
+  width: 100%;
+  flex: 1;
+}
+
+/*
+  changing label position based on editable
+*/
+.inp-cntr[data-editable="false"] input {
+  pointer-events: none;
+  outline: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+.inp-cntr[data-editable="false"] label {
+  transform: translateY(-50%) !important;
+  font-size: 16px !important;
+}
+
+/*
+  removing arrows
+*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+/*
+  validation msg
+*/
+.error {
+  color: red;
+}
