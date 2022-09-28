@@ -8,8 +8,13 @@ import {
 } from "./components/input-elements/ui-components/index";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useTagsInput } from "./hooks/useTagsInput";
+import ComboBoxAutocomplete from "./components/combobox/ComboBoxAutocomplete";
+
+const skills = [...Array(50)].map((_, idx) => `item${idx + 1}`);
 
 function App() {
+  const { DefaultUi } = useTagsInput();
   const initialValues = {
     name: "",
     email: "",
@@ -24,8 +29,8 @@ function App() {
     email: Yup.string().email("not valid email").required("req field"),
     phone: Yup.string()
       .required("req field")
-      .length(10, "Invalid phone number")
-      .matches(new RegExp(/\./, "g"), "dots not allowed"),
+      .length(10, "Invalid phone number"),
+    // .matches(new RegExp("[.]", "g"), "dots not allowed"),
     salary: Yup.object({
       from: Yup.number().required("req field"),
       to: Yup.number().required("req field"),
@@ -80,7 +85,9 @@ function App() {
   useEffect(() => {
     console.log(formik);
   }, [formik]);
-
+  const onCreateOption = () => {
+    console.log("create new option");
+  };
   return (
     <div className="cntr">
       <div className="form-cntr">
@@ -140,7 +147,7 @@ function App() {
             error={formik.touched.phone && formik.errors.phone}
           />
         </div>
-        <div className="mb-40">
+        <div className="mb-20">
           <RangeField
             // error="Required"
             label="Salary"
@@ -157,6 +164,32 @@ function App() {
             value={formik.values.salary}
             error={formik.errors.salary}
             touched={formik.touched.salary}
+          />
+        </div>
+        {/* <div className="mb-40">{DefaultUi("Enter Fruits", true, 6)}</div> */}
+        <div className="mb-40">
+          <ComboBoxAutocomplete
+            // isTagsInside
+            tagsCountLimit={6}
+            options={skills}
+            // options={apiSkills}
+            placeholder="Select Skills"
+            virtualized={false}
+            components={
+              {
+                /* InputControl: TextInput */
+              }
+            }
+            creatable={(newSkill) => newSkill}
+            name="skills"
+            // value={values.skills}
+            onCreateNewOption={() => console.log("crt nw optn")}
+            onApply={(ee) => {
+              // setTouched({ skills: true });
+              // setFieldValue("skills", ee, true);
+              console.log("onapply");
+            }}
+            // error={touched.skills && errors.skills}
           />
         </div>
         <button
