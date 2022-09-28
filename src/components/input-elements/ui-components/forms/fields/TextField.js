@@ -9,11 +9,12 @@ const TextField = ({
   value = "",
   isEditable,
   error,
+  type = "text",
 }) => (
   <div className="inp-cntr" data-editable={!isEditable ? "false" : ""}>
     <label className="label">{label}</label>
     <input
-      type="text"
+      type={type}
       value={value}
       onChange={onChange}
       onBlur={onBlur}

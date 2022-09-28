@@ -5,7 +5,7 @@ import withLabel from "./withLabel";
 const CoreInput = withLabel(Input);
 
 const withInputGroup = (components) => {
-  return ({ type, text, onChange, value, error, label }) => {
+  return ({ type, text, onChange, onBlur, value, name, error, label }) => {
     let PrependComponent = components?.prepend;
     let AddOn = components?.addon;
 
@@ -16,14 +16,18 @@ const withInputGroup = (components) => {
         ) : (
           PrependComponent && <PrependComponent />
         )}
-        <CoreInput
-          label={label}
-          value={value || ""}
-          type={type}
-          onChange={onChange}
-        />
+        <div className="core-inp-cntr">
+          <CoreInput
+            label={label}
+            value={value || ""}
+            name={name}
+            type={type}
+            onChange={onChange}
+            onBlur={onBlur}
+          />
+          {error && <small className="error">{error}</small>}
+        </div>
         {AddOn && <AddOn />}
-        {error && <small className="error">{error}</small>}
       </section>
     );
   };

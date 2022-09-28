@@ -16,14 +16,22 @@ const AddOn = () => {
 const FromInput = withInputGroup({ addon: AddOn });
 const ToInput = withInputGroup({ addon: AddOn });
 
-const RangeField = ({ label, onChange }) => {
-  const [from, setFrom] = useState(0);
-  const [to, setTo] = useState(0);
-  const onChangeFrom = (e) => setFrom(e.target.value);
-  const onChangeTo = (e) => setTo(e.target.value);
-  useEffect(() => {
-    onChange({ from, to });
-  }, [from, to]);
+const RangeField = ({
+  label,
+  onChange,
+  onBlur,
+  name,
+  error,
+  touched,
+  value,
+}) => {
+  // const [from, setFrom] = useState(0);
+  // const [to, setTo] = useState(0);
+  // const onChangeFrom = (e) => setFrom(e.target.value);
+  // const onChangeTo = (e) => setTo(e.target.value);
+  // useEffect(() => {
+  //   onChange({ from, to });
+  // }, [from, to]);
 
   return (
     <Fragment>
@@ -32,10 +40,25 @@ const RangeField = ({ label, onChange }) => {
         <FromInput
           type="number"
           label={"From"}
-          value={from}
-          onChange={onChangeFrom}
+          value={value.from}
+          // value={from}
+          onChange={onChange}
+          onBlur={onBlur}
+          // onChange={onChangeFrom}
+          name={name.from}
+          error={touched?.from && error?.from}
         />
-        <ToInput type="number" label={"To"} value={to} onChange={onChangeTo} />
+        <ToInput
+          type="number"
+          label={"To"}
+          value={value.to}
+          // value={to}
+          onChange={onChange}
+          // onChange={onChangeTo}
+          onBlur={onBlur}
+          name={name.to}
+          error={touched?.to && error?.to}
+        />
       </div>
     </Fragment>
   );

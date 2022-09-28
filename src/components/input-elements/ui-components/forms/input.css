@@ -222,3 +222,6 @@ input[type="number"] {
 .error {
   color: red;
 }
+.core-inp-cntr .error {
+  position: absolute;
+}
