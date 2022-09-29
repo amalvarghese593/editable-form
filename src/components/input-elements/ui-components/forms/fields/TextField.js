@@ -1,27 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../input.css";
 
-const TextField = ({
-  name,
-  label = null,
-  onChange = () => {},
-  onBlur = () => {},
-  value = "",
-  isEditable,
-  error,
-  type = "text",
-}) => (
-  <div className="inp-cntr" data-editable={!isEditable ? "false" : ""}>
-    <label className="label">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      onBlur={onBlur}
-      name={name}
-    />
-    {error && <small className="error">{error}</small>}
-  </div>
+const TextField = React.forwardRef(
+  (
+    {
+      name,
+      label = null,
+      onChange = () => {},
+      onBlur = () => {},
+      value = "",
+      isEditable = true,
+      error,
+      type = "text",
+      placeholder = "",
+      ...rest
+    },
+    ref
+  ) => {
+    useEffect(() => {
+      console.log({ rest });
+    }, [rest]);
+    return (
+      <div className="inp-cntr" data-editable={!isEditable ? "false" : ""}>
+        <label className="label">{label}</label>
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          name={name}
+          placeholder={!label ? placeholder : ""}
+          // ref={ref}
+          {...rest}
+        />
+        {error && <small className="error">{error}</small>}
+      </div>
+    );
+  }
 );
 
 export default TextField;

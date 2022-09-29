@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import RangeField from "./components/input-elements/ui-components/forms/fields/RangeField";
 import "./App.css";
 import {
@@ -82,9 +82,6 @@ function App() {
   // // const { name, phone } = form;
   const [isEditable, setIsEditable] = useState(true);
   const handleClick = () => setIsEditable((prev) => !prev);
-  useEffect(() => {
-    console.log(formik);
-  }, [formik]);
   const onCreateOption = () => {
     console.log("create new option");
   };
@@ -175,11 +172,11 @@ function App() {
             // options={apiSkills}
             placeholder="Select Skills"
             virtualized={false}
-            components={
-              {
-                /* InputControl: TextInput */
-              }
-            }
+            components={{
+              InputControl: React.forwardRef((props, ref) => (
+                <TextInput isEditable={isEditable} {...props} ref={ref} />
+              )),
+            }}
             creatable={(newSkill) => newSkill}
             name="skills"
             // value={values.skills}
@@ -205,3 +202,12 @@ function App() {
 }
 
 export default App;
+
+const TextInput = React.forwardRef((props, ref) => {
+  return (
+    <>
+      {/* <input className="custom-input" ref={ref} {...props} /> */}
+      <TextField /* label={"Select items"} */ ref={ref} {...props} />
+    </>
+  );
+});

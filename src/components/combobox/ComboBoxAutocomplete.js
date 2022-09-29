@@ -159,9 +159,7 @@ const ComboBoxAutocomplete = ({
       );
       e.stopPropagation();
     } else if (e.key === "Enter" && !query && currentIndex !== undefined) {
-      setSelectedItems((prev) =>
-        prev.filter((el, idx) => idx !== currentIndex)
-      );
+      setSelectedItems((prev) => prev.filter((_, idx) => idx !== currentIndex));
     } else if (e.key === "Backspace" && selectedItems.length && !query.length) {
       setSelectedItems((prev) => {
         const copy = [...prev];
@@ -198,6 +196,8 @@ const ComboBoxAutocomplete = ({
       }
     } else if (e.key === "Escape") {
       setIsShowTags(false);
+    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      setCurrentIndex(undefined);
     }
   };
   const createOptionUtility = useCallback(
@@ -317,12 +317,11 @@ const ComboBoxAutocomplete = ({
                 >
                   <div
                     style={{
-                      border: "1px solid #ccc",
+                      border: hasInputControl ? "none" : "1px solid #ccc",
                       borderRadius: "8px",
-                      padding: "8px",
+                      padding: hasInputControl ? "0" : "8px",
                       display: "flex",
                       flexWrap: "wrap",
-                      // gap: "6px",
                     }}
                     ref={inputContainerRef}
                     className="w-100 relative cursor-default  bg-white text-left sm:text-sm"
@@ -514,7 +513,6 @@ const ComboboxInput = ({
   >
     {hasInputControl ? (
       <components.InputControl
-        filled={true}
         label={placeholder || `Select ${placeholder} `}
         placeholder={placeholder || `Select ${placeholder} `}
       />
