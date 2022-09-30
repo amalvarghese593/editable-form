@@ -61,7 +61,9 @@ const ComboBoxAutocomplete = ({
     if (value?.length) setSelectedItems(value);
   }, [value]);
 
-  useEffect(() => setData(options), [options]);
+  useEffect(() => {
+    if (!apiCallInfo) setData(options);
+  }, [options]);
 
   const valueHandler = (e) => {
     clearTimeout(timeout.current);
@@ -69,6 +71,7 @@ const ComboBoxAutocomplete = ({
     if (typedValue.length) setCurrentIndex(undefined);
     setQuery(typedValue);
   };
+
   const transformedLabel = useCallback(
     (ele) => (isStr(ele) ? ele : getLabel(ele)),
     [getLabel]
@@ -84,27 +87,27 @@ const ComboBoxAutocomplete = ({
   );
 
   const filteredData = useMemo(
-    () =>
-      apiCallInfo || getData || query === ""
+    () => {
+      return apiCallInfo || getData || query === ""
         ? data
         : data.filter((option) =>
             lower(transformedLabel(option)).includes(lower(query))
-          ),
+          );
+    },
     /* eslint-disable  react-hooks/exhaustive-deps*/
     [query, data, apiCallInfo, transformedLabel]
   );
 
   const isObjectValue = useMemo(() => type === "object", [type]);
   const isSelected = useCallback(
-    (currentItem) => {
-      return !isSingleSelect
+    (currentItem) =>
+      !isSingleSelect
         ? selectedItems.some(
             (item) => transformedValue(item) === transformedValue(currentItem)
           )
         : isObjectValue
         ? getValue(selectedItems) === currentItem
-        : selectedItems === currentItem;
-    },
+        : selectedItems === currentItem,
     [selectedItems, transformedValue]
   );
 
@@ -142,7 +145,9 @@ const ComboBoxAutocomplete = ({
     const removableItems = [...selectedItems];
     removableItems.splice(index, 1);
     setSelectedItems(removableItems);
-    onApply(removableItems);
+    if (onApply) {
+      onApply(removableItems);
+    }
   };
 
   const captureOnKeyDown = (e, activeOption, open) => {
@@ -200,6 +205,7 @@ const ComboBoxAutocomplete = ({
       setCurrentIndex(undefined);
     }
   };
+
   const createOptionUtility = useCallback(
     (prevState) => {
       let arr = [...prevState];
@@ -247,13 +253,16 @@ const ComboBoxAutocomplete = ({
       if (onApply && isSingleSelect) {
         onApply(selectedItems);
       }
+      if (onSelect) {
+        onSelect(selectedItems);
+      }
     } else {
       isMountedRef.current = true;
     }
   }, [selectedItems]);
 
   const addNewItemHandler = (e) => {
-    if (filteredData.length === 0 && query.length >= 2 && e.key === "Enter") {
+    if (filteredData?.length === 0 && query.length >= 2 && e.key === "Enter") {
       //eslint-disable no-unused-expressions
       addListItemRef?.current?.click();
     }
@@ -294,7 +303,7 @@ const ComboBoxAutocomplete = ({
   );
   const EnterMinTwoCharacters = useMemo(
     () =>
-      filteredData?.length === 0 &&
+      filteredData.length === 0 &&
       query.length < 2 &&
       !isLoading &&
       apiCallInfo && <span>Please enter at least 2 characters</span>,
@@ -311,10 +320,7 @@ const ComboBoxAutocomplete = ({
           {({ open, activeIndex, activeOption }) => {
             return (
               <>
-                <div
-                  className="relative d-flex justify-content-start"
-                  style={{ marginBottom: "8px" }}
-                >
+                <div className="relative d-flex justify-content-start">
                   <div
                     style={{
                       border: hasInputControl ? "none" : "1px solid #ccc",
@@ -324,7 +330,7 @@ const ComboBoxAutocomplete = ({
                       flexWrap: "wrap",
                     }}
                     ref={inputContainerRef}
-                    className="w-100 relative cursor-default  bg-white text-left sm:text-sm"
+                    className="w-100 relative mt-3 cursor-default  bg-white text-left sm:text-sm"
                   >
                     {isTagsInside &&
                       !hideChips &&
@@ -349,7 +355,7 @@ const ComboBoxAutocomplete = ({
                       addNewItemHandler={addNewItemHandler}
                       onClick={() => onClickControl(open)}
                       onKeyDownCapture={(e) =>
-                        captureOnKeyDown(e, activeOption, open)
+                        captureOnKeyDown(e, activeOption)
                       }
                       placeholder={placeholder}
                       hasInputControl={hasInputControl}
@@ -364,55 +370,53 @@ const ComboBoxAutocomplete = ({
                       onClick={comboboxBtnHandler}
                     />
                   </div>
-                  {
-                    <Combobox.Options
-                      style={{
-                        maxHeight: "320px",
-                        width: "320px",
-                        maxWidth: "100%",
-                        top: "106%",
-                      }}
-                      className={`combobox-list absolute ${
-                        isReverse ? "reverse-position" : ""
-                      } px-0 radius:8 flex  flex-column max-h-60 w-100 overflow-auto bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm`}
-                    >
-                      {EnterMinTwoCharacters}
-                      {isLoading && <Loader />}
-                      {AddNewOption}
-                      {!isLoading &&
-                        (virtualized ? (
-                          <ComboboxVirtualization
-                            items={filteredData}
-                            getValue={getValue}
-                            getLabel={getLabel}
-                            isSelected={isSelected}
-                            isSingleSelect={isSingleSelect}
-                          />
-                        ) : (
-                          filteredData?.map((item, idx) => (
-                            <Combobox.Option
-                              key={idx}
-                              className={({ active }) =>
-                                `relative cursor-pointer select-none py-2 pl-5 pr-4 ${
-                                  active
-                                    ? "bg-light text-dark"
-                                    : "text-gray-900"
-                                }`
-                              }
-                              value={transformedValue(item)}
-                            >
-                              {transformedLabel(item)}
-                            </Combobox.Option>
-                          ))
-                        ))}
-                      {!isSingleSelect && (
-                        <ApplyClearBtn
-                          onApplyClick={onApplyClick}
-                          onClear={onClear}
+                  <Combobox.Options
+                    style={{
+                      maxHeight: "320px",
+                      width: "320px",
+                      maxWidth: "100%",
+                      top: "14px",
+                    }}
+                    className={`combobox-list absolute ${
+                      isReverse ? "reverse-position" : ""
+                    } px-0 radius:8 flex  flex-column mt-5 max-h-60 w-100 overflow-auto bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm`}
+                  >
+                    {EnterMinTwoCharacters}
+                    {isLoading && <Loader />}
+                    {AddNewOption}
+                    {!isLoading &&
+                      (virtualized ? (
+                        <ComboboxVirtualization
+                          items={filteredData}
+                          getValue={getValue}
+                          getLabel={getLabel}
+                          isSelected={isSelected}
+                          isSingleSelect={isSingleSelect}
+                          selectedItems={selectedItems}
+                          setSelectedItems={setSelectedItems}
                         />
-                      )}
-                    </Combobox.Options>
-                  }
+                      ) : (
+                        filteredData?.map((item, idx) => (
+                          <Combobox.Option
+                            key={idx}
+                            className={({ active }) =>
+                              `relative cursor-pointer select-none py-2 pl-5 pr-4 ${
+                                active ? "is-active" : ""
+                              }`
+                            }
+                            value={transformedValue(item)}
+                          >
+                            {transformedLabel(item)}
+                          </Combobox.Option>
+                        ))
+                      ))}
+                    {!isSingleSelect && onApply && (
+                      <ApplyClearBtn
+                        onApplyClick={onApplyClick}
+                        onClear={onClear}
+                      />
+                    )}
+                  </Combobox.Options>
                 </div>
                 {!isTagsInside &&
                   !hideChips &&
@@ -517,14 +521,7 @@ const ComboboxInput = ({
         placeholder={placeholder || `Select ${placeholder} `}
       />
     ) : (
-      <input
-        style={{
-          border: "none",
-          outline: "none",
-          flexGrow: "1",
-        }}
-        placeholder={placeholder}
-      />
+      <input style={{ border: "1px solid #000" }} />
     )}
   </Combobox.Input>
 );

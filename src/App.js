@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import RangeField from "./components/input-elements/ui-components/forms/fields/RangeField";
 import "./App.css";
 import {
   TextField,
   PhoneNumberField,
-  NumberField,
 } from "./components/input-elements/ui-components/index";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useTagsInput } from "./hooks/useTagsInput";
-import ComboBoxAutocomplete from "./components/combobox/ComboBoxAutocomplete";
+import ComboBoxAutocomplete from "combobox";
 
 const skills = [...Array(50)].map((_, idx) => `item${idx + 1}`);
 
@@ -207,7 +206,7 @@ const TextInput = React.forwardRef((props, ref) => {
   return (
     <>
       {/* <input className="custom-input" ref={ref} {...props} /> */}
-      <TextField /* label={"Select items"} */ ref={ref} {...props} />
+      <TextField ref={ref} {...props} />
     </>
   );
 });

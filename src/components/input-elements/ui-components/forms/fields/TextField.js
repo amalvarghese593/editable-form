@@ -16,27 +16,22 @@ const TextField = React.forwardRef(
       ...rest
     },
     ref
-  ) => {
-    useEffect(() => {
-      console.log({ rest });
-    }, [rest]);
-    return (
-      <div className="inp-cntr" data-editable={!isEditable ? "false" : ""}>
-        <label className="label">{label}</label>
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          name={name}
-          placeholder={!label ? placeholder : ""}
-          // ref={ref}
-          {...rest}
-        />
-        {error && <small className="error">{error}</small>}
-      </div>
-    );
-  }
+  ) => (
+    <div className="inp-cntr" data-editable={!isEditable ? "false" : ""}>
+      <label className="label">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        name={name}
+        placeholder={!label ? placeholder : ""}
+        ref={ref}
+        {...rest}
+      />
+      {error && <small className="error">{error}</small>}
+    </div>
+  )
 );
 
 export default TextField;
